@@ -5,3 +5,5 @@ def alex(request):
 
 def artur(request):
     return render(request, 'main/about.html')
+def coach(request):
+    return render(request,'main/coach.html')
