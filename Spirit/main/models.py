@@ -32,8 +32,10 @@ class Client(models.Model):
     name = models.CharField('Имя клиента', max_length=30)
     age = models.IntegerField('Возраст')
     number = models.CharField('Номер телефона', max_length=20)
-    card = models.ForeignKey(Card, on_delete=models.CASCADE)
-
+    card = models.ForeignKey(Card,null=True, on_delete=models.CASCADE)
+    login = models.CharField('Логин', max_length=30)
+    password = models.CharField('Пароль', max_length=30)
+    pass
     def __str__(self):
         return self.name
 class Request(models.Model):
