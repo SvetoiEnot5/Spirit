@@ -1,16 +1,14 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Client
+from .models import Profile
 
 
-class LoginForm(AuthenticationForm):
-    class Meta:
-        model = Client
-        fields = ('login','password')
-
-
-class RegistrationForm(UserCreationForm):
-    class Meta:
-        model = Client
-        fields = ['name','age', 'number', 'login' ,'password']
-
+# class LoginForm(AuthenticationForm):
+#     class Meta:
+#         model = Client
+#         fields = ('login','password')
+#
+#
+# class ProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ('name', 'phone_nubmber', 'age')
