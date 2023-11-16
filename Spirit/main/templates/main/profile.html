@@ -1,4 +1,20 @@
 {% extends 'main/base.html' %}
 
 {% block title %}Профиль{% endblock %}
-{% block content %}Профиль{% endblock %}
+{% block content %}
+{% for post in posts %}
+<ul class="list-group">
+        <li class="list-group-item bg-warning text-dark"><h5>Логин : {{post.username}}</h5></li>
+        <li class="list-group-item bg-warning text-dark"><h5>Почта : {{post.email}}</h5></li>
+      </ul>
+      {% endfor %}
+{% for prof in profile %}
+<ul class="list-group">
+        <li class="list-group-item bg-warning text-dark"><h5>Имя : {{prof.name}}</h5></li>
+        <li class="list-group-item bg-warning text-dark"><h5>Возраст : {{prof.age}}</h5></li>
+        <li class="list-group-item bg-warning text-dark"><h5>Номер телефона : {{prof.phone_number}}</h5></li>
+      </ul>
+      {% endfor %}
+
+ <br><a href="/update">Редактировать профиль</a>
+{% endblock %}

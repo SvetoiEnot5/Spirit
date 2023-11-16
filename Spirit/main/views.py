@@ -3,7 +3,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
-# from .forms import ProfileForm
+from django.views.generic import UpdateView
+from .forms import UpdateProfileForm, UpdateUserForm
+
+from .models import Profile
 
 def alex(request):
     return render(request, 'main/index.html')
@@ -61,7 +64,36 @@ def handlelogout(request):
     messages.success(request, "Logout Success")
     return redirect('/')
 def profile(request):
-    return render(request, 'main/profile.html')
+    username=request.user
+    posts=User.objects.filter(username= username)
+    profile=Profile.objects.filter(user=username)
+    context={'posts':posts,'profile':profile}
+    return render(request, 'main/profile.html',context)
+
+@login_required()
+def update(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Ваш профиль был успешно обновлен!')
+            return redirect('/profile')
+        else:
+            messages.error(request, 'Пожалуйста, исправьте ошибки.')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+    return render(request, 'main/update.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+# class UpdateProfile(UpdateView):
+#     model = User
+#     model1 = Profile
+#     template_name = 'main/update.html'
+#     form_class = UpdateProfileForm
 # views.py
 
 # @login_required

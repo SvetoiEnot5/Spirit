@@ -1,14 +1,37 @@
 from django import forms
 from .models import Profile
+from django.contrib.auth.models import User
+from django.forms import ModelForm, TextInput, NumberInput
 
+class UpdateUserForm(ModelForm):
+    class Meta:
+        model = User
+        fields =['username','email']
 
-# class LoginForm(AuthenticationForm):
-#     class Meta:
-#         model = Client
-#         fields = ('login','password')
-#
-#
-# class ProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ('name', 'phone_nubmber', 'age')
+        widgets = {
+            "username": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Логин'
+            }),
+            "email": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Почта'
+        })}
+class UpdateProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields =['name','phone_number','age']
+
+        widgets = {
+            "name": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Имя'
+            }),
+            "phone_number": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Номер телефона'
+            }),
+            "age": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Возраст'
+            })}
