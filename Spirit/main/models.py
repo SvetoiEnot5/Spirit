@@ -13,6 +13,8 @@ class Coach(models.Model):
     def __str__(self):
         return self.name
 
+    def filter_coach(self):
+        return Coach.object.order_by('name')
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
@@ -24,7 +26,9 @@ class Gym(models.Model):
 
     def __str__(self):
         return self.name
-
+    class Meta:
+        verbose_name = 'Зал'
+        verbose_name_plural = 'Залы'
 
 class Card(models.Model):
     name = models.CharField('Название абонемента', max_length=30)
@@ -35,11 +39,21 @@ class Card(models.Model):
     def __str__(self):
         return self.name + ' ' + self.price
 
+
+    class Meta:
+        verbose_name = 'Абонемент'
+        verbose_name_plural = 'Абонементы'
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=30, blank=True)
     phone_number = models.IntegerField(null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

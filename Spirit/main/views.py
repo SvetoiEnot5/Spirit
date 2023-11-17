@@ -3,19 +3,25 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
-from django.views.generic import UpdateView
 from .forms import UpdateProfileForm, UpdateUserForm
-
-from .models import Profile
+from .models import Profile, Coach
+from django.http import JsonResponse
 
 def alex(request):
     return render(request, 'main/index.html')
 
 
 def coach(request):
-    return render(request, 'main/coach.html')
+    coaches = Coach.objects.all()[:3]
+    tren = Coach.objects.all()[3:]
+    context = {"coaches": coaches,
+               "tren": tren}
+    return render(request, 'main/coach.html', context)
 
-
+def filter_coaches(request):
+    filtered = Coach.objects.order_by('-name')
+    print(filtered)
+    return render(request, 'main/coach.html', {"coaches": filtered})
 def register(request):
     if request.method == "POST":
         username = request.POST.get('login')

@@ -1,20 +1,51 @@
 {% extends 'main/base.html' %}
 
 {% block title %}Профиль{% endblock %}
-{% block content %}
-{% for post in posts %}
-<ul class="list-group">
-        <li class="list-group-item bg-warning text-dark"><h5>Логин : {{post.username}}</h5></li>
-        <li class="list-group-item bg-warning text-dark"><h5>Почта : {{post.email}}</h5></li>
-      </ul>
-      {% endfor %}
-{% for prof in profile %}
-<ul class="list-group">
-        <li class="list-group-item bg-warning text-dark"><h5>Имя : {{prof.name}}</h5></li>
-        <li class="list-group-item bg-warning text-dark"><h5>Возраст : {{prof.age}}</h5></li>
-        <li class="list-group-item bg-warning text-dark"><h5>Номер телефона : {{prof.phone_number}}</h5></li>
-      </ul>
-      {% endfor %}
-
- <br><a href="/update">Редактировать профиль</a>
-{% endblock %}
+{% block hero %}
+<section id="hero" class="d-flex align-items-center">
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="500">
+<!--{% for post in posts %}-->
+<!--<ul class="list-group">-->
+<!--  <li class="list-group-item">Логин : {{post.username}}</li>-->
+<!--  <li class="list-group-item">Почта : {{post.email}}</li>-->
+<!--    </ul>-->
+<!--      {% endfor %}-->
+<!--{% for prof in profile %}-->
+<!--<ul class="list-group">-->
+<!--    <li class="list-group-item">Имя : {{prof.name}}</li>-->
+<!--    <li class="list-group-item">Возраст : {{prof.age}}</li>-->
+<!--    <li class="list-group-item">Номер телефона : {{prof.phone_number}}</li>-->
+<!--</ul>-->
+<!--      {% endfor %}-->
+        {% for prof in profile %}
+<div class="card mb-1" style="max-width: 3000px;">
+    <div class="row no-gutters">
+    <div class="col-md-4">
+        <img src="static/assets/img/та самая.jpg" class="card-img" alt="" style="height: 100%;">
+    </div>
+        <div class="col-md-8 col-mr-4">
+            <div class="card-body">
+                <h5 class="card-title"><b>{{prof.name}}</b></h5>
+                {% endfor %}
+                <p class="card-text"></p>
+            </div>
+            {% for post in posts %}
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Логин : {{post.username}}</li>
+                <li class="list-group-item">Почта : {{post.email}}</li>
+                        {% endfor %}
+                  {% for prof in profile %}
+                <li class="list-group-item">Имя : {{prof.name}}</li>
+                <li class="list-group-item">Возраст : {{prof.age}}</li>
+                <li class="list-group-item">Номер телефона : {{prof.phone_number}}</li>
+              </ul>
+              <div class="card-body">
+                <a href="/update" class="card-link">Редактировать профиль</a>
+                              {% endfor %}
+              </div>
+        </div>
+  </div>
+</div>
+</div>
+  </section><!-- End Hero -->
+{% endblock hero %}
