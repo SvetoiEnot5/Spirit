@@ -13,36 +13,58 @@ class Coach(models.Model):
     def __str__(self):
         return self.name
 
-    def filter_coach(self):
-        return Coach.object.order_by('name')
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
-
-
-class Gym(models.Model):
-    name = models.CharField('Название зала', max_length=30)
-    description = models.TextField()
+class Workouts(models.Model):
+    name = models.CharField('Название тренировки', max_length=30)
+    price = models.IntegerField('Цена')
 
     def __str__(self):
         return self.name
     class Meta:
+        verbose_name = 'Тренировка'
+        verbose_name_plural = 'Тренировки'
+
+class Gym(models.Model):
+    name = models.CharField('Название зала', max_length=30)
+    description = models.TextField()
+    coahes = models.ManyToManyField(Coach)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
-class Card(models.Model):
-    name = models.CharField('Название абонемента', max_length=30)
-    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
-    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+class CardPlan(models.Model):
+    duration = models.CharField('Длительность', max_length=30)
     price = models.IntegerField('Цена')
 
     def __str__(self):
-        return self.name + ' ' + self.price
+        return self.duration
+    class Meta:
+        verbose_name = 'План абонемента'
+        verbose_name_plural = 'Планы абонементов'
 
+class Card(models.Model):
+    user = models.OneToOneField(User,null=True, on_delete=models.CASCADE)
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
+    duration = models.ForeignKey(CardPlan,on_delete=models.CASCADE, blank=True, null=True)
+    IssueDate = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    price = models.IntegerField('Цена')
+    is_payed = models.BooleanField('Статус оплаты',blank=True, default=False)
+
+    def __str__(self):
+        return str(self.user)
 
     class Meta:
         verbose_name = 'Абонемент'
         verbose_name_plural = 'Абонементы'
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=30, blank=True)
@@ -51,21 +73,19 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-# class Request(models.Model):
-#     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-#     card = models.ForeignKey(Card, on_delete=models.CASCADE)
-#     status = models.BooleanField(default=False)
-#     def __str__(self):
-#         return self.client.name+ ' ' + self.card.name
+

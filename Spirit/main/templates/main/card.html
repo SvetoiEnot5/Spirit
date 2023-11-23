@@ -1,0 +1,119 @@
+{% extends 'main/base.html' %}
+{% block title %} Enrollment for Gym {% endblock title%}
+{% block content %}
+
+<br><br><center> <h1>Оформление абонемента</h1> </center>
+
+<div class="container mt-2">
+  <div class="row">
+    <div class="col-md-3"></div>
+
+    <div class="col-md-6">
+      {% for message in messages %}
+      <div
+        class="alert alert-{{message.tags}} alert-dismissible fade show"
+        role="alert"
+      >
+        <strong></strong> {{message}}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %}
+
+      <form action="/card" method="post" id="enrollment-form">{% csrf_token %}
+        {% csrf_token %}
+
+        <div class="form-group">
+          <select class="form-control mt-2" id="gym" name="gym" required>
+            <option selected>Выбрать зал</option>
+            {% for p in gym %}
+            <option value="{{p.name}}">{{p.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control mt-2" id="coach" name="coach" required>
+            <option selected>Выбрать тренера</option>
+            {% for p in coach %}
+            <option value="{{p.name}}">{{p.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control mt-2" id="plan" name="plan" required>
+            <option selected>Выбрать длительность</option>
+            {% for p in plan %}
+            <option value="{{p.duration}}" data-price="{{p.price}}">{{p.duration}} месяцев</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <input type="number" class="form-control mt-2" value="" name="price" id="price" placeholder="Стоимость" readonly />
+        </div>
+        <div class="form-group">
+          <br />
+          <div class="d-grid gap-2">
+            <button class="btn btn-warning" type="submit">Enroll</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-3"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("enrollment-form");
+
+    form.addEventListener("change", function () {
+      updatePrice();
+    });
+
+    function updatePrice() {
+      var gymSelect = document.getElementById("gym");
+      var planSelect = document.getElementById("plan");
+      var priceInput = document.getElementById("price");
+
+      var selectedGym = gymSelect.options[gymSelect.selectedIndex].value;
+      var selectedPlan = planSelect.options[planSelect.selectedIndex];
+      var planPrice = selectedPlan.getAttribute("data-price");
+
+      // Допустим, вы хотите, чтобы цена была суммой стоимости выбранного зала и стоимости выбранного плана.
+      var totalPrice = calculateTotalPrice(selectedGym, planPrice);
+
+      priceInput.value = totalPrice;
+    }
+
+    function calculateTotalPrice(gym, planPrice) {
+      // Ваш логический код для вычисления общей стоимости
+      // Например, вы можете добавить стоимость зала к стоимости плана.
+
+      // Вот пример:
+      var gymPrice = getGymPrice(gym);
+      return parseInt(gymPrice) + parseInt(planPrice);
+    }
+
+    function getGymPrice(gym) {
+      // Здесь вы можете вернуть стоимость зала в зависимости от его имени.
+      // Это просто заглушка, вы должны заменить ее на реальную логику.
+      // Например, вы можете хранить стоимости залов в объекте и возвращать соответствующую стоимость по имени.
+
+      // Вот пример заглушки:
+      var gymPrices = {
+        "Зал1": 50,
+        "Зал2": 75,
+        // Добавьте другие залы с их стоимостью
+      };
+
+      return gymPrices[gym] || 0; // Если зала нет в списке, вернуть 0 или другое значение по умолчанию.
+    }
+  });
+</script>
+
+{% endblock %}

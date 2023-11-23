@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from .forms import UpdateProfileForm, UpdateUserForm
-from .models import Profile, Coach
-from django.http import JsonResponse
+from .models import Profile, Coach, Gym, CardPlan, Card
+from django.shortcuts import get_object_or_404
 
 def alex(request):
     return render(request, 'main/index.html')
@@ -17,11 +17,13 @@ def coach(request):
     context = {"coaches": coaches,
                "tren": tren}
     return render(request, 'main/coach.html', context)
+def gym(request):
+    gym = Gym.objects.all()[:3]
+    tren = Gym.objects.all()[3:]
+    context = {"coaches": gym,
+               "tren": tren}
+    return render(request, 'main/gym.html', context)
 
-def filter_coaches(request):
-    filtered = Coach.objects.order_by('-name')
-    print(filtered)
-    return render(request, 'main/coach.html', {"coaches": filtered})
 def register(request):
     if request.method == "POST":
         username = request.POST.get('login')
@@ -73,7 +75,9 @@ def profile(request):
     username=request.user
     posts=User.objects.filter(username= username)
     profile=Profile.objects.filter(user=username)
-    context={'posts':posts,'profile':profile}
+    cards=Card.objects.filter(user=username)
+    print(cards)
+    context={'posts':posts,'profile':profile, 'cards':cards}
     return render(request, 'main/profile.html',context)
 
 @login_required()
@@ -95,25 +99,27 @@ def update(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
-# class UpdateProfile(UpdateView):
-#     model = User
-#     model1 = Profile
-#     template_name = 'main/update.html'
-#     form_class = UpdateProfileForm
-# views.py
 
-# @login_required
-# def update_profile(request):
-#     if request.method == 'POST':
-#         profile_form = ProfileForm(request.POST, instance=request.user.profile)
-#         if  profile_form.is_valid():
-#             profile_form.save()
-#             messages.success(request, 'Ваш профиль был успешно обновлен!')
-#             return redirect('settings:profile')
-#         else:
-#             messages.error(request, 'Пожалуйста, исправьте ошибки.')
-#     else:
-#         profile_form = ProfileForm(instance=request.user.profile)
-#     return render(request, '/profile.html', {
-#         'profile_form': profile_form
-#     })
+def card(request):
+    if request.user.is_authenticated:
+        gym = Gym.objects.all()
+        coach = Coach.objects.all()
+        plan = CardPlan.objects.all()
+        if request.method == "POST":
+            hall_id = request.POST.get('gym')
+            trainer_id = request.POST.get('coach')
+            duration_id = request.POST.get('plan')
+            print(duration_id)
+            price = request.POST.get('price')
+            hall = get_object_or_404(Gym, name=hall_id)
+            trainer = get_object_or_404(Coach, name=trainer_id)
+            duration = get_object_or_404(CardPlan, duration=duration_id)
+            query = Card(user=request.user, gym=hall, coach=trainer, duration=duration, price=price)
+            query.save()
+            messages.success(request, "Вы оформили абонемент")
+            return redirect('/card')
+    return render(request,'main/card.html', {
+        'gym': gym,
+        'coach': coach,
+        'plan': plan,
+    })
