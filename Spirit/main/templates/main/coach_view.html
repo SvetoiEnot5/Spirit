@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+{% block title %}{{coach.name}}{% endblock %}
+{% block content %}
+<div class="container position-relative">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card-deck">
+                <div class="card" style="width: 30rem">
+                    {% if coach.image %}
+                    <img src="{{coach.image.url}}" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
+                    {% else %}
+                    <img src="static/main/image/загружено.jpg" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{coach.name}}</h5>
+                        <p class="card-text">Возраст : {{coach.age}}</p>
+                        <p class="card-text">Специализация :  {{coach.qualification}}</p>
+                        <p class="card-text">Опыт работы :  {{coach.experience}} лет</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Форма с данными о тренировках -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Данные о тренировках</h5>
+                    {% for card in coach_cards %}
+                    <!-- Ваша форма с данными о тренировках здесь -->
+                    <!-- Пример: -->
+                    <p class="card-text">Имя клиента {{card.user.profile.name}}</p>
+                    <p class="card-text">Зал {{card.gym}}</p>
+                    <p class="card-text">Цена {{card.price}}</p>
+                    <!-- Добавьте необходимые поля для отображения данных о тренировках -->
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

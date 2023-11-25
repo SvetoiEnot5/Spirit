@@ -47,7 +47,7 @@
           <select class="form-control mt-2" id="plan" name="plan" required>
             <option selected>Выбрать длительность</option>
             {% for p in plan %}
-            <option value="{{p.duration}}" data-price="{{p.price}}">{{p.duration}} месяцев</option>
+            <option value="{{p.duration}}" data-price="{{p.price}}">{{p.duration}}</option>
             {% endfor %}
           </select>
         </div>

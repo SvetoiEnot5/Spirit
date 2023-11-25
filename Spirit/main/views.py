@@ -2,10 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
 from .forms import UpdateProfileForm, UpdateUserForm
 from .models import Profile, Coach, Gym, CardPlan, Card
 from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
+
 
 def alex(request):
     return render(request, 'main/index.html')
@@ -17,12 +19,15 @@ def coach(request):
     context = {"coaches": coaches,
                "tren": tren}
     return render(request, 'main/coach.html', context)
+
+
 def gym(request):
     gym = Gym.objects.all()[:3]
     tren = Gym.objects.all()[3:]
     context = {"coaches": gym,
                "tren": tren}
     return render(request, 'main/gym.html', context)
+
 
 def register(request):
     if request.method == "POST":
@@ -71,14 +76,17 @@ def handlelogout(request):
     logout(request)
     messages.success(request, "Logout Success")
     return redirect('/')
+
+
 def profile(request):
-    username=request.user
-    posts=User.objects.filter(username= username)
-    profile=Profile.objects.filter(user=username)
-    cards=Card.objects.filter(user=username)
+    username = request.user
+    posts = User.objects.filter(username=username)
+    profile = Profile.objects.filter(user=username)
+    cards = Card.objects.filter(user=username)
     print(cards)
-    context={'posts':posts,'profile':profile, 'cards':cards}
-    return render(request, 'main/profile.html',context)
+    context = {'posts': posts, 'profile': profile, 'cards': cards}
+    return render(request, 'main/profile.html', context)
+
 
 @login_required()
 def update(request):
@@ -100,6 +108,7 @@ def update(request):
         'profile_form': profile_form
     })
 
+
 def card(request):
     if request.user.is_authenticated:
         gym = Gym.objects.all()
@@ -109,7 +118,6 @@ def card(request):
             hall_id = request.POST.get('gym')
             trainer_id = request.POST.get('coach')
             duration_id = request.POST.get('plan')
-            print(duration_id)
             price = request.POST.get('price')
             hall = get_object_or_404(Gym, name=hall_id)
             trainer = get_object_or_404(Coach, name=trainer_id)
@@ -118,8 +126,25 @@ def card(request):
             query.save()
             messages.success(request, "Вы оформили абонемент")
             return redirect('/card')
-    return render(request,'main/card.html', {
+    return render(request, 'main/card.html', {
         'gym': gym,
         'coach': coach,
         'plan': plan,
     })
+
+
+class CoachView(DetailView):
+    model = Coach
+    template_name = 'main/coach_view.html'
+    context_object_name = 'coach'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        coach = self.get_object()
+
+        coach_cards = Card.objects.filter(coach=coach)
+
+        context['coach_cards'] = coach_cards
+
+        return context

@@ -2,21 +2,30 @@
 {% block title %}Coachs{% endblock %}
 {% block hero %}
 <section id="hero" class="d-flex align-items-center">
-    <div class="container position-relative" data-aos="fade-up" data-aos-delay="500">
+    <div class="container position-relative" >
+      <div class="row">
 {% for coach in coaches %}
-<div class="card-deck">
-  <div class="card">
-    <img src="..." class="card-img-top" alt="...">
+<div class="col-md-4">
+  <div class="card" style="width: 100%;">
+    {% if coach.image %}
+    <img src="{{coach.image.url}}" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
+    {% else %}
+                    <img src="static/main/image/загружено.jpg" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
+                    {% endif %}
     <div class="card-body">
       <h5 class="card-title">{{coach.name}}</h5>
       <p class="card-text">Возраст : {{coach.age}}</p>
       <p class="card-text">Специализация :  {{coach.qualification}}</p>
-      <p class="card-text">Опыт работы :  {{coach.experience}} лет</p>
+      <p class="card-text">Опыт работы :  {{coach.experience}}</p>
+    </div>
+    <div class="card-body">
+      <a href="{% url 'coachview' coach.id %}" class="btn btn-primary">Страница тренера</a>
     </div>
   </div>
 </div><br>
 {% endfor %}
     </div>
+      </div>
 </section>
 {% endblock %}
 {% block content %}
@@ -24,13 +33,20 @@
 {% for tr in tren %}
 <div class="container position-relative">
 <div class="card-deck">
-  <div class="card">
-    <img src="..." class="card-img-top" alt="...">
+  <div class="card" style="width: 25rem;">
+    {% if tr.image %}
+    <img src="{{tr.image.url}}" class="card-img-top" alt="...">
+    {% else %}
+                    <img src="static/main/image/загружено.jpg" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
+                    {% endif %}
     <div class="card-body">
       <h5 class="card-title">{{tr.name}}</h5>
       <p class="card-text">Возраст : {{tr.age}}</p>
       <p class="card-text">Специализация :  {{tr.qualification}}</p>
-      <p class="card-text">Опыт работы :  {{tr.experience}} лет</p>
+      <p class="card-text">Опыт работы :  {{tr.experience}}</p>
+    </div>
+    <div class="card-body">
+      <a href="{% url 'coachview' tr.id %}" class="btn btn-primary">Страница тренера</a>
     </div>
   </div>
 </div><br>
