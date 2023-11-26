@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-{% block title %} Enrollment for Gym {% endblock title%}
+{% block title %} Абонемент {% endblock title%}
 {% block content %}
 
 <br><br><center> <h1>Оформление абонемента</h1> </center>
@@ -31,7 +31,7 @@
           <select class="form-control mt-2" id="gym" name="gym" required>
             <option selected>Выбрать зал</option>
             {% for p in gym %}
-            <option value="{{p.name}}">{{p.name}}</option>
+            <option value="{{p.name}}" data-gprice="{{p.price}}">{{p.name}}</option>
             {% endfor %}
           </select>
         </div>
@@ -47,7 +47,7 @@
           <select class="form-control mt-2" id="plan" name="plan" required>
             <option selected>Выбрать длительность</option>
             {% for p in plan %}
-            <option value="{{p.duration}}" data-price="{{p.price}}">{{p.duration}}</option>
+            <option value="{{p.duration}}" data-price="{{p.price}}">{{p.duration}} - {{p.price}} рублей</option>
             {% endfor %}
           </select>
         </div>
@@ -57,7 +57,7 @@
         <div class="form-group">
           <br />
           <div class="d-grid gap-2">
-            <button class="btn btn-warning" type="submit">Enroll</button>
+            <button class="btn btn-warning" type="submit">Оформить</button>
           </div>
         </div>
       </form>
@@ -80,22 +80,22 @@
       var planSelect = document.getElementById("plan");
       var priceInput = document.getElementById("price");
 
-      var selectedGym = gymSelect.options[gymSelect.selectedIndex].value;
+      var selectedGym = gymSelect.options[gymSelect.selectedIndex];
       var selectedPlan = planSelect.options[planSelect.selectedIndex];
       var planPrice = selectedPlan.getAttribute("data-price");
+      var gymPrice = selectedGym.getAttribute("data-gprice");
 
       // Допустим, вы хотите, чтобы цена была суммой стоимости выбранного зала и стоимости выбранного плана.
-      var totalPrice = calculateTotalPrice(selectedGym, planPrice);
+      var totalPrice = calculateTotalPrice(gymPrice, planPrice);
 
       priceInput.value = totalPrice;
     }
 
-    function calculateTotalPrice(gym, planPrice) {
+    function calculateTotalPrice(gymPrice, planPrice) {
       // Ваш логический код для вычисления общей стоимости
       // Например, вы можете добавить стоимость зала к стоимости плана.
 
       // Вот пример:
-      var gymPrice = getGymPrice(gym);
       return parseInt(gymPrice) + parseInt(planPrice);
     }
 

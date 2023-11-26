@@ -20,21 +20,22 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <!-- Форма с данными о тренировках -->
+        <div class="col-md-4"><br>
+            <h2> Клиенты </h2>
+                                {% for card in coach_cards %}
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Данные о тренировках</h5>
-                    {% for card in coach_cards %}
-                    <!-- Ваша форма с данными о тренировках здесь -->
-                    <!-- Пример: -->
-                    <p class="card-text">Имя клиента {{card.user.profile.name}}</p>
-                    <p class="card-text">Зал {{card.gym}}</p>
-                    <p class="card-text">Цена {{card.price}}</p>
-                    <!-- Добавьте необходимые поля для отображения данных о тренировках -->
-                    {% endfor %}
+                    <h5 class="card-title">{{card.user.profile.name}}</h5>
+                    <p class="card-text">Зал для занятия: {{card.gym}}</p>
+                    <p class="card-text">Статус оплаты :
+                                    {% if card.is_payed == False %}
+                                        <span style="color: red;">Не оплачено</span> {% else %}
+                                        <span style="color: green;">Оплачено</span>
+                                    {% endif %}
+                                </p>
                 </div>
-            </div>
+            </div><br>
+                                {% endfor %}
         </div>
     </div>
 </div>

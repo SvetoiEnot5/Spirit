@@ -49,7 +49,10 @@
           <li><a class="nav-link scrollto" href="gym">Залы</a></li>
           <li><a class="nav-link scrollto " href="card">Оформить абонемент</a></li>
           {% if request.user.is_authenticated %}
-          <li><a class="nav-link scrollto active" href="logout">Выйти</a></li>
+            {% if request.user.is_superuser %}
+                    <li><a class="nav-link scrollto " href="stat">Статистика</a></li>
+            {% endif %}
+            <li><a class="nav-link scrollto active" href="logout">Выйти</a></li>
           {% endif %}
 <!--          <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li>-->
 <!--          <li><a class="nav-link scrollto" href="#team">Team</a></li>-->

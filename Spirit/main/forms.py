@@ -1,7 +1,7 @@
 from django import forms
 from .models import Profile
 from django.contrib.auth.models import User
-from django.forms import ModelForm, TextInput, NumberInput
+from django.forms import ModelForm, TextInput, NumberInput, FileInput
 
 class UpdateUserForm(ModelForm):
     class Meta:
@@ -20,7 +20,7 @@ class UpdateUserForm(ModelForm):
 class UpdateProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields =['name','phone_number','age']
+        fields =['name','phone_number','age', 'image']
 
         widgets = {
             "name": TextInput(attrs={

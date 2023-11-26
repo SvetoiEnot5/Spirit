@@ -3,58 +3,77 @@
 {% block title %}Профиль{% endblock %}
 {% block hero %}
 <section id="hero" class="d-flex align-items-center">
-    <div class="container position-relative" data-aos="fade-up" data-aos-delay="500">
-        {% for prof in profile %}
-<div class="card mb-1" style="max-width: 3000px;">
-    <div class="row no-gutters">
-    <div class="col-md-4">
-        {% if prof.image %}
-            <img src="{{prof.image.url}}" class="card-img" alt="" style="height: 100%;">
-        {% else %}
-            <img src="static/main/image/загружено.jpg" class="card-img" alt="" style="height: 100%;">
-        {% endif %}
-    </div>
-        <div class="col-md-8 col-mr-4">
-            <div class="card-body">
-                <h5 class="card-title"><b>{{prof.name}}</b></h5>
-                {% endfor %}
-                <p class="card-text"></p>
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                <strong></strong> {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            {% for post in posts %}
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">Логин : {{post.username}}</li>
-                <li class="list-group-item">Почта : {{post.email}}</li>
+        {% endfor %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4" style="max-width: 900px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% for prof in profile %}
+                                {% if prof.image %}
+                                    <img src="{{prof.image.url}}" class="card-img" alt="" style="height: 100%;">
+                                {% else %}
+                                    <img src="static/main/image/загружено.jpg" class="card-img" alt=""
+                                         style="height: 100%;">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>{{prof.name}}</b></h5>
+                                <p class="card-text"></p>
+                                {% for post in posts %}
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">Логин : {{post.username}}</li>
+                                        <li class="list-group-item">Почта : {{post.email}}</li>
+                                    </ul>
+                                {% endfor %}
+                                {% for prof in profile %}
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">Имя : {{prof.name}}</li>
+                                        <li class="list-group-item">Возраст : {{prof.age}}</li>
+                                        <li class="list-group-item">Номер телефона : {{prof.phone_number}}</li>
+                                    </ul>
+                                    <div class="card-body">
+                                        <a href="/update" class="card-link">Редактировать профиль</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Данные об абонементе</b></h5>
+                        <p class="card-text"></p>
+                        {% for card in cards %}
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Тренер : {{card.coach}}</li>
+                                <li class="list-group-item">Зал : {{card.gym}}</li>
+                                <li class="list-group-item">Длительность абонемента : {{card.duration}} </li>
+                                <li class="list-group-item">Дата оформления : {{card.IssueDate}} </li>
+                                <li class="list-group-item">Цена : {{card.price}} рублей</li>
+                                <li class="list-group-item">Статус оплаты :
+                                    {% if card.is_payed == False %}
+                                        <span style="color: red;">Не оплачено</span> {% else %}
+                                        <span style="color: green;">Оплачено</span>
+                                    {% endif %}
+                                </li>
+                            </ul>
                         {% endfor %}
-                  {% for prof in profile %}
-                <li class="list-group-item">Имя : {{prof.name}}</li>
-                <li class="list-group-item">Возраст : {{prof.age}}</li>
-                <li class="list-group-item">Номер телефона : {{prof.phone_number}}</li>
-              </ul>
-              <div class="card-body">
-                <a href="/update" class="card-link">Редактировать профиль</a>
-                              {% endfor %}
-              </div>
+                    </div>
+                </div>
+            </div>
         </div>
-  </div>
-</div>
-</div>
-  </section><!-- End Hero -->
-{% endblock hero %}
-{% block content %}
-{% for card in cards %}
-<div class="card" style="width: 18rem;">
-    <ul class="list-group list-group-flush">
-                <li class="list-group-item">Тренер : {{card.coach}}</li>
-                <li class="list-group-item">Зал : {{card.gym}}</li>
-                <li class="list-group-item">Длительность абонемента : {{card.duration}} </li>
-                <li class="list-group-item">Дата оформления : {{card.IssueDate}} </li>
-                <li class="list-group-item">Цена : {{card.price}} </li>
-                <li class="list-group-item">Статус оплаты :
-                    {% if card.is_payed == False %}
-                    <span style="color: red;">Не оплачено</span> {% else %}
-                    <span style="color: green;">Оплачено</span>
-                    {% endif %}</li>
-              </ul>
     </div>
-{% endfor %}
-{% endblock %}
+</section>
+{% endblock hero %}
