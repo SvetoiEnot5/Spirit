@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .forms import UpdateProfileForm, UpdateUserForm
-from .models import Profile, Coach, Gym, CardPlan, Card
+from .models import Profile, Coach, Gym, CardPlan, Card, Schedule
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
+from django.http import JsonResponse
 
 
 def alex(request):
@@ -114,6 +115,7 @@ def card(request):
         gym = Gym.objects.all()
         coach = Coach.objects.all()
         plan = CardPlan.objects.all()
+        schedule = Schedule.objects.all()
         if Card.objects.filter(user=username):
             messages.warning(request, "У вас есть абонемент")
             return redirect('/profile')
@@ -134,6 +136,7 @@ def card(request):
             'gym': gym,
             'coach': coach,
             'plan': plan,
+            'schedule': schedule
         })
     else:
         return redirect('/login')
@@ -149,8 +152,10 @@ class CoachView(DetailView):
         coach = self.get_object()
 
         coach_cards = Card.objects.filter(coach=coach)
+        coach_schedule = Schedule.objects.filter(coach=coach)
 
         context['coach_cards'] = coach_cards
+        context['schedule'] = coach_schedule
 
         return context
 
@@ -167,3 +172,9 @@ def stat(request):
     }
 
     return render(request, 'main/stat.html', context)
+
+def get_schedule(request):
+    coach_name = request.GET.get('coach', '')
+    schedule_entries = Schedule.objects.filter(coach=coach_name)
+    data = [{'start': entry.start} for entry in schedule_entries]
+    return JsonResponse(data, safe=False)

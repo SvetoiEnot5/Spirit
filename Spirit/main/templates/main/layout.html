@@ -1,72 +1,55 @@
 <!DOCTYPE html>
-<html lang="ru">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spirit Fitness Center</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        #navbar {
-            background-color: black;
-            overflow: hidden;
-            display: flex; /* Используем flexbox для расположения элементов в строку */
-            align-items: center; /* Выравниваем элементы по центру по вертикали */
-            justify-content: space-between;
-        }
-        #navbar h1 {
-            display: flex;
-            align-items: center;
-            line-height: 40px; /* Высота меню */
-            font-family: 'Roboto', sans-serif;
-            color: White
-        }
-        .menu h1 img {
-            width: 10px; /* Размер изображения */
-            vertical-align: middle;
-        }
-        #navbar a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        #navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .content {
-            padding: 20px;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datetime-picker@4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <title>Выбор даты и времени</title>
 </head>
-
 <body>
-    <div id="navbar">
-        <h1>
-            <img src="static/main/image/logo1.jpg" alt="Логотип">
-            Spirit Fitness Center
-        </h1>
-        <a href="home">Главная страница</a>
-        <a href="coach">Тренеры</a>
-        <a href="">Залы</a>
-        <a href="#equipment">Оборудование</a>
-        <a href="login">Личный кабинет</a>
-        <a href="#subscription">Оформление абонемента</a>
-    </div>
 
-{% block content %}
-{% endblock %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="datetimepicker">Выберите дату и время:</label>
+                <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" />
+                    <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-datetime-picker@4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 </body>
-
 </html>
+
+<script>
+    $(function () {
+        $('#datetimepicker').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+            sideBySide: true,
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-crosshairs',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            }
+        });
+    });
+</script>

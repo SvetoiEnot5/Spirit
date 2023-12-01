@@ -44,6 +44,29 @@
           </select>
         </div>
         <div class="form-group">
+    <select class="form-control mt-2" id="schedule" name="schedule" required>
+        <option selected>Выбрать время тренировки</option>
+        {% for entry in schedule %}
+                    <option value="{{ entry.coach }}">{{ entry.start }}</option>
+        {% endfor %}
+    </select>
+</div>
+          <div class="form-group">
+    <select class="form-control mt-2" id="schedule1" name="schedule1" required>
+        <option selected>Выбрать время тренировки</option>
+        {% for entry in schedule %}
+                    <option value="{{ entry.coach }}">{{ entry.start }}</option>
+        {% endfor %}
+    </select>
+</div><div class="form-group">
+    <select class="form-control mt-2" id="schedule2" name="schedule1" required>
+        <option selected>Выбрать время тренировки</option>
+        {% for entry in schedule %}
+                    <option value="{{ entry.coach }}">{{ entry.start }}</option>
+        {% endfor %}
+    </select>
+</div>
+        <div class="form-group">
           <select class="form-control mt-2" id="plan" name="plan" required>
             <option selected>Выбрать длительность</option>
             {% for p in plan %}
@@ -70,9 +93,16 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("enrollment-form");
-
+    var selectedTimeslots = {};
+    {% for entry in schedule %}
+    selectedTimeslots["{{ entry.start }}"] = false;
+    {% endfor %}
     form.addEventListener("change", function () {
       updatePrice();
+      updateTrainer();
+      updateSchedule();
+      updateSchedule1();
+      updateSchedule2();
     });
 
     function updatePrice() {
@@ -90,6 +120,119 @@
 
       priceInput.value = totalPrice;
     }
+    function updateTrainer() {
+      var gymSelect = document.getElementById("gym");
+      var coachSelect = document.getElementById("coach");
+
+      var selectedGym = gymSelect.options[gymSelect.selectedIndex].value;
+      var selectedCoach = coachSelect.options[coachSelect.selectedIndex].value;
+
+      // Очистите текущий список тренеров
+      coachSelect.innerHTML = '<option selected>Выбрать тренера</option>';
+
+      // Добавьте тренеров, работающих в выбранном зале
+      {% for coach in coach %}
+        {% for gym in coach.gym.all %}
+          if (selectedGym === "{{ gym.name }}") {
+            var option = document.createElement("option");
+            option.value = "{{ coach.name }}";
+            option.text = "{{ coach.name }}";
+             if (selectedCoach === "{{ coach.name }}") {
+                    option.selected = true;
+                }
+            coachSelect.add(option);
+          }
+        {% endfor %}
+      {% endfor %}
+    }
+    function updateSchedule() {
+    var gymSelect = document.getElementById("gym");
+    var coachSelect = document.getElementById("coach");
+    var scheduleSelect = document.getElementById("schedule");
+
+    var selectedGym = gymSelect.options[gymSelect.selectedIndex].value;
+    var selectedCoach = coachSelect.options[coachSelect.selectedIndex].value;
+    var selectedSchedule = scheduleSelect.options[scheduleSelect.selectedIndex].value;
+
+
+    // Очистите текущий список расписания
+    scheduleSelect.innerHTML = '<option selected>Выбрать время тренировки</option>';
+
+    // Добавьте расписание, связанное с выбранным залом и тренером
+    {% for entry in schedule %}
+    {% for gym in entry.coach.gym.all %}
+    if (selectedCoach === "{{entry.coach.name}}" && selectedGym === "{{gym.name}}")
+        var option = document.createElement("option");
+        option.value = "{{ entry.start }}";
+        option.text = "{{ entry.start }}";
+        console.log("selectedTimeslots:", selectedTimeslots)
+        if (selectedTimeslots[entry.start] === false) {
+        scheduleSelect.add(option);}
+        if (selectedSchedule === "{{ entry.start }}") {
+                    option.selected = true;
+                    selectedTimeslots[selectedSchedule] = true;
+                }
+    {% endfor %}
+  {% endfor %}
+}
+function updateSchedule1() {
+    var gymSelect = document.getElementById("gym");
+    var coachSelect = document.getElementById("coach");
+    var scheduleSelect = document.getElementById("schedule1");
+
+    var selectedGym = gymSelect.options[gymSelect.selectedIndex].value;
+    var selectedCoach = coachSelect.options[coachSelect.selectedIndex].value;
+    var selectedSchedule = scheduleSelect.options[scheduleSelect.selectedIndex].value;
+
+
+    // Очистите текущий список расписания
+    scheduleSelect.innerHTML = '<option selected>Выбрать время тренировки</option>';
+
+    // Добавьте расписание, связанное с выбранным залом и тренером
+    {% for entry in schedule %}
+    {% for gym in entry.coach.gym.all %}
+    if (selectedCoach === "{{entry.coach.name}}" && selectedGym === "{{gym.name}}")
+        var option = document.createElement("option");
+        option.value = "{{ entry.start }}";
+        option.text = "{{ entry.start }}";
+        if (selectedSchedule === "{{ entry.start }}") {
+                    option.selected = true;
+                    selectedTimeslots[selectedSchedule] = true;
+                }
+        if (!selectedTimeslots[entry.start]) {
+        scheduleSelect.add(option);}
+    {% endfor %}
+  {% endfor %}
+}
+function updateSchedule2() {
+    var gymSelect = document.getElementById("gym");
+    var coachSelect = document.getElementById("coach");
+    var scheduleSelect = document.getElementById("schedule2");
+
+    var selectedGym = gymSelect.options[gymSelect.selectedIndex].value;
+    var selectedCoach = coachSelect.options[coachSelect.selectedIndex].value;
+    var selectedSchedule = scheduleSelect.options[scheduleSelect.selectedIndex].value;
+
+
+    // Очистите текущий список расписания
+    scheduleSelect.innerHTML = '<option selected>Выбрать время тренировки</option>';
+
+    // Добавьте расписание, связанное с выбранным залом и тренером
+    {% for entry in schedule %}
+    {% for gym in entry.coach.gym.all %}
+    if (selectedCoach === "{{entry.coach.name}}" && selectedGym === "{{gym.name}}")
+        var option = document.createElement("option");
+        option.value = "{{ entry.start }}";
+        option.text = "{{ entry.start }}";
+        if (selectedSchedule === "{{ entry.start }}") {
+                    option.selected = true;
+                    selectedTimeslots[selectedSchedule] = true;
+                }
+        if (!selectedTimeslots[entry.start]) {
+        scheduleSelect.add(option);}
+    {% endfor %}
+  {% endfor %}
+}
 
     function calculateTotalPrice(gymPrice, planPrice) {
       // Ваш логический код для вычисления общей стоимости
@@ -97,21 +240,6 @@
 
       // Вот пример:
       return parseInt(gymPrice) + parseInt(planPrice);
-    }
-
-    function getGymPrice(gym) {
-      // Здесь вы можете вернуть стоимость зала в зависимости от его имени.
-      // Это просто заглушка, вы должны заменить ее на реальную логику.
-      // Например, вы можете хранить стоимости залов в объекте и возвращать соответствующую стоимость по имени.
-
-      // Вот пример заглушки:
-      var gymPrices = {
-        "Зал1": 50,
-        "Зал2": 75,
-        // Добавьте другие залы с их стоимостью
-      };
-
-      return gymPrices[gym] || 0; // Если зала нет в списке, вернуть 0 или другое значение по умолчанию.
     }
   });
 </script>

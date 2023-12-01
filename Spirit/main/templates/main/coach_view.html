@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 {% block title %}{{coach.name}}{% endblock %}
 {% block content %}
 <div class="container position-relative">
@@ -33,10 +34,18 @@
                                         <span style="color: green;">Оплачено</span>
                                     {% endif %}
                                 </p>
+                    <div class="schedule">
+                        {% for entry in schedule %}
+                        <div class="schedule-entry">
+                            {{ entry.start }}
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div><br>
                                 {% endfor %}
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import alex, coach, register, handlelogin, handlelogout, profile, update, gym, card, CoachView, stat
+from .views import alex, coach, register, handlelogin, handlelogout, profile, update, gym, card, CoachView, stat, get_schedule
 
 urlpatterns = [
     path('home', alex, name='home'),
@@ -13,5 +13,6 @@ urlpatterns = [
     path('update', update, name='update'),
     path('card', card, name='card'),
     path('stat', stat, name='stat'),
+    path('get_schedule', get_schedule, name='get_schedule'),
     path('<int:pk>', CoachView.as_view(), name='coachview')
 ]

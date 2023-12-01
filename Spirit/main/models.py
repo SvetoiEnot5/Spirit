@@ -4,20 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-class Coach(models.Model):
-    name = models.CharField('Имя тренера', max_length=30)
-    age = models.IntegerField('Возраст')
-    qualification = models.CharField('Специализация', max_length=30)
-    experience = models.CharField('Опыт работы', max_length=30)
-    image = models.ImageField(null=True, blank=True, upload_to='coachs/')
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Тренер'
-        verbose_name_plural = 'Тренеры'
-
 
 class Workouts(models.Model):
     name = models.CharField('Название тренировки', max_length=30)
@@ -32,7 +18,7 @@ class Workouts(models.Model):
 
 class Gym(models.Model):
     name = models.CharField('Название зала', max_length=30)
-    workouts = models.ManyToManyField(Workouts, related_name='+')
+    workouts = models.ManyToManyField(Workouts, related_name='Тренировки')
     price = models.IntegerField('Цена', null=True)
     image = models.ImageField(null=True, blank=True, upload_to='coachs/')
 
@@ -42,6 +28,22 @@ class Gym(models.Model):
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
+
+class Coach(models.Model):
+    name = models.CharField('Имя тренера', max_length=30)
+    age = models.IntegerField('Возраст')
+    qualification = models.CharField('Специализация', max_length=30)
+    experience = models.CharField('Опыт работы', max_length=30)
+    gym = models.ManyToManyField(Gym, related_name='Залы')
+    image = models.ImageField(null=True, blank=True, upload_to='coachs/')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Тренер'
+        verbose_name_plural = 'Тренеры'
+
 
 
 class CardPlan(models.Model):
@@ -54,23 +56,6 @@ class CardPlan(models.Model):
     class Meta:
         verbose_name = 'План абонемента'
         verbose_name_plural = 'Планы абонементов'
-
-
-class Card(models.Model):
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
-    duration = models.ForeignKey(CardPlan, on_delete=models.CASCADE, blank=True, null=True)
-    IssueDate = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    price = models.IntegerField('Цена')
-    is_payed = models.BooleanField('Статус оплаты', blank=True, default=False)
-
-    def __str__(self):
-        return str(self.user)
-
-    class Meta:
-        verbose_name = 'Абонемент'
-        verbose_name_plural = 'Абонементы'
 
 
 class Profile(models.Model):
@@ -86,6 +71,35 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
+
+class Schedule(models.Model):
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    start = models.DateTimeField("Дата и время тренировки")
+    is_busy = models.BooleanField('Cтатус расписания', blank=True, default=False)
+    def __str__(self):
+        return str(self.coach)
+
+    class Meta:
+        verbose_name = 'Расписание'
+        verbose_name_plural = 'Расписание'
+
+class Card(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
+    schedule = models.ManyToManyField(Schedule, related_name='Расписание')
+    duration = models.ForeignKey(CardPlan, on_delete=models.CASCADE, blank=True, null=True)
+    IssueDate = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    price = models.IntegerField('Цена')
+    is_payed = models.BooleanField('Статус оплаты', blank=True, default=False)
+
+    def __str__(self):
+        return str(self.user)
+
+    class Meta:
+        verbose_name = 'Абонемент'
+        verbose_name_plural = 'Абонементы'
 
 
 @receiver(post_save, sender=User)
