@@ -115,7 +115,7 @@ def card(request):
         gym = Gym.objects.all()
         coach = Coach.objects.all()
         plan = CardPlan.objects.all()
-        schedule = Schedule.objects.all()
+        schedule = Schedule.objects.filter(is_busy=False)
         if Card.objects.filter(user=username):
             messages.warning(request, "У вас есть абонемент")
             return redirect('/profile')
@@ -123,12 +123,19 @@ def card(request):
             if request.method == "POST":
                 hall_id = request.POST.get('gym')
                 trainer_id = request.POST.get('coach')
+                schedule_id = request.POST.get('schedule')
                 duration_id = request.POST.get('plan')
                 price = request.POST.get('price')
                 hall = get_object_or_404(Gym, name=hall_id)
                 trainer = get_object_or_404(Coach, name=trainer_id)
+                schedule = get_object_or_404(Schedule, start=schedule_id)
+                print(schedule)
+                schedule.number += 1
+                if (schedule.number == 3):
+                    schedule.is_busy = True
+                schedule.save()
                 duration = get_object_or_404(CardPlan, duration=duration_id)
-                query = Card(user=request.user, gym=hall, coach=trainer, duration=duration, price=price)
+                query = Card(user=request.user, gym=hall, coach=trainer,schedule=schedule,  duration=duration, price=price)
                 query.save()
                 messages.success(request, "Вы оформили абонемент")
                 return redirect('/card')

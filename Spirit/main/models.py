@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-
 class Workouts(models.Model):
     name = models.CharField('Название тренировки', max_length=30)
 
@@ -29,6 +28,7 @@ class Gym(models.Model):
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
+
 class Coach(models.Model):
     name = models.CharField('Имя тренера', max_length=30)
     age = models.IntegerField('Возраст')
@@ -43,7 +43,6 @@ class Coach(models.Model):
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
-
 
 
 class CardPlan(models.Model):
@@ -72,23 +71,27 @@ class Profile(models.Model):
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
 
+
 class Schedule(models.Model):
     coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    start = models.DateTimeField("Дата и время тренировки")
-    is_busy = models.BooleanField('Cтатус расписания', blank=True, default=False)
+    start = models.CharField("Время тренировки",max_length=30)
+    number = models.IntegerField('Количество человек', blank=True, default=0)
+    is_busy = models.BooleanField('Время переполнено', blank=True, default=False)
+
     def __str__(self):
-        return str(self.coach)
+        return str(self.start) + " " + str(self.coach)
 
     class Meta:
         verbose_name = 'Расписание'
         verbose_name_plural = 'Расписание'
 
+
 class Card(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
     coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
-    schedule = models.ManyToManyField(Schedule, related_name='Расписание')
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, blank=True, null=True)
     duration = models.ForeignKey(CardPlan, on_delete=models.CASCADE, blank=True, null=True)
     IssueDate = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     price = models.IntegerField('Цена')

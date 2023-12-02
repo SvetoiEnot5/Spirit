@@ -10,40 +10,35 @@
                     {% if coach.image %}
                     <img src="{{coach.image.url}}" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
                     {% else %}
-                    <img src="static/main/image/загружено.jpg" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
+                    <img src="{% static 'main/image/загружено.jpg' %}" class="card-img-top" alt="..." style="object-fit: cover; height: 500px;">
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{coach.name}}</h5>
-                        <p class="card-text">Возраст : {{coach.age}}</p>
-                        <p class="card-text">Специализация :  {{coach.qualification}}</p>
-                        <p class="card-text">Опыт работы :  {{coach.experience}} лет</p>
+                        <p class="card-text">Возраст: {{coach.age}}</p>
+                        <p class="card-text">Специализация: {{coach.qualification}}</p>
+                        <p class="card-text">Опыт работы: {{coach.experience}} лет</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4"><br>
-            <h2> Клиенты </h2>
-                                {% for card in coach_cards %}
+            <h2> Расписание </h2>
+            {% regroup schedule by gym as gym_entries %}
+            {% for gym_entry in gym_entries %}
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{card.user.profile.name}}</h5>
-                    <p class="card-text">Зал для занятия: {{card.gym}}</p>
-                    <p class="card-text">Статус оплаты :
-                                    {% if card.is_payed == False %}
-                                        <span style="color: red;">Не оплачено</span> {% else %}
-                                        <span style="color: green;">Оплачено</span>
-                                    {% endif %}
-                                </p>
+                    <p class="card-text">Зал: {{ gym_entry.grouper }}</p>
+                    <p class="card-text">Время тренировок:</p>
                     <div class="schedule">
-                        {% for entry in schedule %}
-                        <div class="schedule-entry">
-                            {{ entry.start }}
-                        </div>
+                        {% for entry in gym_entry.list %}
+                            <div class="schedule-entry {% if entry.is_busy %}busy-time{% endif %}">
+                                {{ entry.start }}{% if entry.is_busy %} - Нет мест{% endif %}
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
             </div><br>
-                                {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </div>

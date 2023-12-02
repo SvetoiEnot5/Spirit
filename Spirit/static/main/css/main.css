@@ -1,6 +1,7 @@
-/* Ваш CSS-файл (например, schedule.css) */
+
 .schedule {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
 }
 
@@ -13,6 +14,8 @@
     margin: 5px; /* Внешний отступ между прямоугольниками */
 }
 .busy-time {
-    /* Стили для занятого времени */
     background-color: #dddddd; /* Серый цвет фона */
+}
+.full {
+    color: blue; /* или другой цвет, который указывает на отсутствие мест */
 }
