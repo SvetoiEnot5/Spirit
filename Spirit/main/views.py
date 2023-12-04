@@ -15,8 +15,8 @@ def alex(request):
 
 
 def coach(request):
-    coaches = Coach.objects.all()[:3]
-    tren = Coach.objects.all()[3:]
+    coaches = Coach.objects.filter(is_coach=False)[:3]
+    tren = Coach.objects.filter(is_coach=False)[3:]
     context = {"coaches": coaches,
                "tren": tren}
     return render(request, 'main/coach.html', context)
@@ -129,9 +129,10 @@ def card(request):
                 hall = get_object_or_404(Gym, name=hall_id)
                 trainer = get_object_or_404(Coach, name=trainer_id)
                 schedule = get_object_or_404(Schedule, start=schedule_id)
-                print(schedule)
                 schedule.number += 1
-                if (schedule.number == 3):
+                if schedule.number == 3 and schedule.coach != 'Без тренера':
+                    schedule.is_busy = True
+                if schedule.number == 10 and schedule.coach == 'Без тренера':
                     schedule.is_busy = True
                 schedule.save()
                 duration = get_object_or_404(CardPlan, duration=duration_id)

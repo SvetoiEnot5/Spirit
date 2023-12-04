@@ -31,12 +31,12 @@ class Gym(models.Model):
 
 class Coach(models.Model):
     name = models.CharField('Имя тренера', max_length=30)
-    age = models.IntegerField('Возраст')
-    qualification = models.CharField('Специализация', max_length=30)
-    experience = models.CharField('Опыт работы', max_length=30)
+    age = models.IntegerField('Возраст', null=True, blank=True)
+    qualification = models.CharField('Специализация', max_length=30, null=True, blank=True)
+    experience = models.CharField('Опыт работы', max_length=30, null=True, blank=True)
     gym = models.ManyToManyField(Gym, related_name='Залы')
     image = models.ImageField(null=True, blank=True, upload_to='coachs/')
-
+    is_coach = models.BooleanField('без тренера', blank=True, default=False)
     def __str__(self):
         return self.name
 
